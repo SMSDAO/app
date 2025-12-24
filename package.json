@@ -37,7 +37,7 @@
     "million": "^3.1.11",
     "next": "15.2.3",
     "next-themes": "^0.3.0",
-    "react": "19.0.0",
+    "react": "19.2.1",
     "react-dom": "19.0.0",
     "react-i18next": "^14.1.2",
     "react-virtualized": "^9.22.5",
