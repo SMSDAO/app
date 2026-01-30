@@ -1,14 +1,4 @@
-SMSDAO / Ethereum Follow Protocol Web App
 ⚡ The Social Portfolio Platform for On‑Chain Identity, Social Graphs & DAO Intelligence
-<p align="center">
-<img src="https://raw.githubusercontent.com/SMSDAO/app/main/public/icon.png" width="120" />
-</p>
-
-<p align="center">
-<strong>Next‑gen social wallet platform built on Next.js  15, React 19, and multi‑chain identity.</strong><br/>
-<em>Track portfolios, social activity, DAO governance, and creator ecosystems — all in one unified interface.</em>
-</p>
-
 🚀 Features
 🧬 Unified On‑Chain Identity
 ENS resolution
@@ -71,16 +61,13 @@ Blockchain	Viem, Wagmi, RainbowKit
 Solana	Helius, @solana/web3.js
 DAO	Snapshot, Tally
 Hosting	Vercel Edge Network
-📦 Installation
-sh
+📦 Installation:
+
 bun install
 bun dev
-Production build:
-
-sh
 bun run build
-📁 Repository Structure
-Code
+
+📁 Repository Structure:
 src/
 ├── app/                # Next.js App Router
 │   ├── api/            # Serverless API routes
@@ -97,11 +84,8 @@ src/
 ├── utils/              # Helpers & utilities
 ├── data/               # CSV datasets
 └── hooks/              # React hooks
-📚 Documentation
-Full documentation lives in:
-
-Code
 /docs
+
 Key entries:
 📘 ARCHITECTURE.md — High‑level system architecture
 
@@ -115,34 +99,29 @@ Key entries:
 
 ⚙️ workflows/ — CI/CD, governance, release process
 
-🔌 API Overview
-The platform exposes a full suite of serverless API routes:
-
+API Overview
 👤 Profile
-Code
 GET /api/profile/[address]
 POST /api/profile/claim
-💰 Wallet
-Code
+
+Wallet:
 GET /api/wallet/[address]/tokens
 GET /api/wallet/[address]/nfts
 GET /api/wallet/[address]/transactions
-🟣 Social
-Code
+
+🟣 Social:
 GET /api/social/farcaster/[fid]
 GET /api/social/lens/[handle]
 GET /api/social/zora/[address]
+
 🏛 DAO
-Code
 GET /api/dao/[address]/memberships
 GET /api/dao/[address]/activity
-🔍 Search
-Code
-GET /api/search?q=...
-Full API documentation is in:
 
-Code
-docs/api/
+🔍 Search
+GET /api/search?q=...
+Full API documentation: docs/api/
+
 🧪 CI/CD Pipeline
 Every PR must pass:
 
@@ -162,10 +141,8 @@ AI review (advisory)
 
 Deployment is automatic on merge to main.
 
-Full workflow docs:
+Full workflow docs: docs/workflows/
 
-Code
-docs/workflows/
 🛡 Security
 SIWE authentication
 
@@ -190,11 +167,7 @@ All features must include documentation
 
 All API routes must define typed contracts
 
-CI must remain green
-
-See:
-
-Code
+CI must remain green 
 docs/workflows/release-process.md
 ⭐ Roadmap
 🔮 AI‑powered profile insights
@@ -215,28 +188,3 @@ Built with ❤️ by the SMSDAO ecosystem.
 
 📜 License
 MIT License.
-
-
-This document defines the **canonical release workflow** for the SMSDAO Social Portfolio Platform.  
-It mirrors the governance and CI discipline used in your other ecosystem repos (e.g. CyberAi).
-
-##  Release Principles
-
-- **Deterministic:** Same inputs → same build → same behavior.
-- **Additive‑first:** Prefer additive changes; removals require explicit justification.
-- **Documented:** Every meaningful change must be reflected in `docs/`.
-- **Guarded:** Protected branches are only updated via PRs with passing checks.
-- **Reversible:** Every release must be traceable and roll‑backable.
-
-##  Checklist for Every Release
-
-Before merging into `main`, confirm:
-
-- [ ] All required CI checks are green
-- [ ] Docs updated (`docs/` where relevant)
-- [ ] No unreviewed breaking changes
-- [ ] No stray debug logs or test code
-- [ ] Contracts and APIs remain consistent
-- [ ] Rollback path is clear (previous `main` commit)
-
-This process is the **source of truth** for how changes move from idea → code → production in this repo.
