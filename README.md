@@ -1,88 +1,148 @@
-# README (Canonical)
-This README is the canonical source. The version in /docs is a synchronized mirror.
+# Release Process
 
-> [!NOTE]
-> The project is under active development.
-
-<br />
-
-<p align="center">
-  <a href="https://efp.app" target="_blank" rel="noopener noreferrer">
-    <img width="275" src="https://docs.efp.app/logo.png" alt="EFP logo" />
-  </a>
-</p>
-
-<p align="center">
-  <a href="https://pr.new/ethereumfollowprotocol/app"><img src="https://developer.stackblitz.com/img/start_pr_dark_small.svg" alt="Start new PR in StackBlitz Codeflow" /></a>
-  <a href="https://discord.com/invite/ZUyG3mSXFD"><img src="https://img.shields.io/badge/chat-discord-blue?style=flat&logo=discord" alt="discord chat" /></a>
-  <a href="https://x.com/efp"><img src="https://img.shields.io/twitter/follow/efp?label=%40efp&style=social&link=https%3A%2F%2Fx.com%2Fefp" alt="x account" /></a>
-</p>
-
-<h1 align="center" style="font-size: 2.75rem; font-weight: 900; color: white;">Ethereum Follow Protocol Web App</h1>
-
-## Overview
-
-The Ethereum Follow Protocol (EFP) is a native Ethereum protocol designed for following and tagging Ethereum addresses. This web application serves as the interface for interacting with the protocol, providing users with a seamless experience to manage their social graph on the blockchain.
-
-## Important Links
-
-- **Documentation**: [docs.efp.app](https://docs.efp.app)
-- **Follow us on 𝕏**: [@efp](https://x.com/efp)
-- **Join our Discord**: [Discord](https://discord.efp.app)
-
-## Important links
-
-- Documentation: [**docs.efp.app**](https://docs.efp.app)
-
-## Getting started with development
-
-### Prerequisites
-
-- [Node.js LTS](https://nodejs.org/en) (LTS which is currently 20.x)
-- [Bun runtime](https://bun.sh/) (latest version)
-
-### Installation
-
-```bash
-git clone https://github.com/ethereumfollowprotocol/app.git && cd app
-```
-
-> [!NOTE]
-> If vscode extensions behave weirdly or stops giving type hints, run ⌘+⇧+P and type `> Developer: Restart Extension Host` to restart the extension host.
-
-```bash
-# upgrade bun to make sure you have the latest version
-bun upgrade
-# then install all dependencies
-bun install
-```
-
-### Environment Variables
-
-```bash
-cp .env.example .env
-```
-
-Now you should be able to run the following without getting any errors:
-
-```bash
-bun lint && bun format && bun typecheck && bun run build
-```
-
-## Contributing
-
-We welcome contributions! Please see our [Contributing Guidelines](./.github/CONTRIBUTING.md) for more details.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for more information.
-
-## Contact
-
-For any inquiries, please contact the project maintainer at [encrypted@ethfollow.xyz](mailto:encrypted@ethfollow.xyz).
+This document defines the **canonical release workflow** for the SMSDAO Social Portfolio Platform.  
+It mirrors the governance and CI discipline used in your other ecosystem repos (e.g. CyberAi).
 
 ---
 
-Follow [**@efp**](https://x.com/efp) on **𝕏** for updates and join the [**Discord**](https://discord.efp.app) to get involved.
+## 1. Release Principles
 
-This README provides a comprehensive overview of the Ethereum Follow Protocol Web App, including setup instructions, important links, and contribution guidelines. Feel free to reach out if you have any questions or need further assistance.
+- **Deterministic:** Same inputs → same build → same behavior.
+- **Additive‑first:** Prefer additive changes; removals require explicit justification.
+- **Documented:** Every meaningful change must be reflected in `docs/`.
+- **Guarded:** Protected branches are only updated via PRs with passing checks.
+- **Reversible:** Every release must be traceable and roll‑backable.
+
+---
+
+## 2. Branch Model
+
+- **`main`**
+  - Always deployable.
+  - Protected: requires PR + passing checks.
+- **Feature branches**
+  - Named by purpose, e.g. `feature/top-eight-editor`, `fix/leaderboard-pagination`.
+- **Copilot / automation branches**
+  - e.g. `copilot/build-social-wallet-platform`.
+  - Subject to the same rules as human branches.
+
+---
+
+## 3. Required Checks
+
+For any PR targeting `main`, the following must pass:
+
+- **Type check** (TypeScript)
+- **Lint** (ESLint)
+- **Tests** (Vitest / Testing Library)
+- **Security scan** (e.g. Snyk / custom workflow)
+- **Docs build** (`build-docs`)
+- **AI review** (advisory but preferred green)
+
+If any required check fails, the PR is **not** merged unless an admin performs an explicit override.
+
+---
+
+## 4. Standard Release Flow
+
+1. **Create branch**
+   - From `main`
+   - Name clearly: `feature/*`, `fix/*`, `chore/*`, `copilot/*`.
+
+2. **Implement changes**
+   - Keep commits focused and small.
+   - Update or add docs under `docs/` as needed.
+   - Maintain type safety and invariants from `ARCHITECTURE_FULL_SPECS.md`.
+
+3. **Run checks locally (recommended)**
+   - `bun lint`
+   - `bun test`
+   - `bun typecheck` (or equivalent)
+   - `bun run build`
+
+4. **Open Pull Request**
+   - Target: `main`
+   - Include a clear description:
+     - What changed
+     - Why it changed
+     - Any migrations or risks
+
+5. **CI runs**
+   - All required workflows execute:
+     - tests, lint, typecheck, security, docs, AI review.
+
+6. **Review**
+   - At least one human review for non‑trivial changes.
+   - Confirm:
+     - No unintended logic removal
+     - Contracts and APIs remain consistent
+     - Docs are updated
+
+7. **Merge**
+   - Use **“Squash and merge”** or **“Merge commit”** per repo convention.
+   - Only when all required checks are green (or explicit admin override).
+
+8. **Deploy**
+   - `main` is automatically deployed via Vercel (or configured target).
+   - Verify health checks and basic smoke tests.
+
+---
+
+## 5. Hotfix Process
+
+Hotfixes are for **urgent production issues** only.
+
+1. Branch from `main`: `hotfix/<issue>`
+2. Fix the issue with minimal surface area.
+3. Run at least:
+   - Type check
+   - Lint
+4. Open PR to `main` with clear “HOTFIX” label.
+5. Merge once critical checks pass.
+6. Deploy immediately.
+7. Follow up with:
+   - Tests
+   - Docs
+   - Post‑mortem if needed.
+
+---
+
+## 6. Versioning & Tags (Optional)
+
+If/when semantic versioning is adopted:
+
+- Tag releases as `vX.Y.Z`.
+- Maintain a `CHANGELOG.md` summarizing:
+  - Added
+  - Changed
+  - Fixed
+  - Removed
+
+Tags should be created **only after** a successful deployment from `main`.
+
+---
+
+## 7. Governance & Exceptions
+
+- Any deviation from this process must be:
+  - Explicitly documented in the PR description.
+  - Approved by a maintainer/admin.
+- Large, structural changes (e.g. new architecture, new integrations) must:
+  - Update `ARCHITECTURE.md`
+  - Update `ARCHITECTURE_FULL_SPECS.md`
+  - Optionally add or update specs under `docs/specs/`.
+
+---
+
+## 8. Checklist for Every Release
+
+Before merging into `main`, confirm:
+
+- [ ] All required CI checks are green
+- [ ] Docs updated (`docs/` where relevant)
+- [ ] No unreviewed breaking changes
+- [ ] No stray debug logs or test code
+- [ ] Contracts and APIs remain consistent
+- [ ] Rollback path is clear (previous `main` commit)
+
+This process is the **source of truth** for how changes move from idea → code → production in this repo.
