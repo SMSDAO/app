@@ -554,9 +554,12 @@ Planned features and improvements:
 - **GitHub Issues**: [Issues](https://github.com/SMSDAO/app/issues) - Bug reports and feature requests
 - **Email**: [encrypted@ethfollow.xyz](mailto:encrypted@ethfollow.xyz) - Direct support
 
-🛠 Maintainers
-SMSDAO / Ethereum Follow Protocol  
+## 🛠 Maintainers
+
+**SMSDAO / Ethereum Follow Protocol**
+
 Built with ❤️ by the SMSDAO ecosystem.
 
-📜 License
-MIT License.
+## 📜 License
+
+[MIT License](LICENSE) - see the LICENSE file for details.
