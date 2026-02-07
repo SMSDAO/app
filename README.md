@@ -104,7 +104,7 @@ The Social Portfolio Platform aggregates on-chain identity, multi-chain portfoli
 ### Prerequisites
 
 - **Bun**: Latest version (`curl -fsSL https://bun.sh/install | bash`)
-- **Node.js**: v20.x LTS or higher
+  - Bun is an all-in-one JavaScript runtime that replaces Node.js for this project
 - **Git**: Latest version
 
 ### Installation
@@ -141,6 +141,7 @@ bun start            # Start production server
 bun lint             # Run ESLint
 bun format           # Format with Prettier
 bun typecheck        # TypeScript type checking
+bun fix              # Run lint and format with auto-fix
 bun check            # Run all checks (lint + format + typecheck + build)
 
 # Maintenance
@@ -370,7 +371,7 @@ bun fix               # Run lint and format with auto-fix
 
 ### Testing Best Practices
 
-While there's no test infrastructure currently, follow these guidelines when tests are added:
+The project currently uses GitHub Actions for CI/CD testing (linting, type checking, and build verification). When unit/integration tests are added in the future, follow these guidelines:
 - Write unit tests for utilities and hooks
 - Write integration tests for API routes
 - Aim for 80%+ code coverage on critical paths
