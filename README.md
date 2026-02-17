@@ -1,7 +1,7 @@
 # Social Portfolio Platform
 
-[![Deploy](https://github.com/SMSDAO/app/workflows/Deploy/badge.svg)](https://github.com/SMSDAO/app/actions)
-[![Test](https://github.com/SMSDAO/app/workflows/Test/badge.svg)](https://github.com/SMSDAO/app/actions)
+[![Deploy](https://github.com/ethereumfollowprotocol/app/workflows/Deploy/badge.svg)](https://github.com/ethereumfollowprotocol/app/actions)
+[![Test](https://github.com/ethereumfollowprotocol/app/workflows/Test/badge.svg)](https://github.com/ethereumfollowprotocol/app/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 > **The comprehensive platform for Web3 identity, social graphs, and DAO intelligence.**
@@ -69,8 +69,8 @@ The Social Portfolio Platform aggregates on-chain identity, multi-chain portfoli
 | **UI Framework** | React 19 | Component-based user interface |
 | **Styling** | Tailwind CSS 4 | Utility-first CSS framework |
 | **State Management** | TanStack Query | Server state management and caching |
-| **Forms** | React Hook Form + Valibot | Form handling and validation |
-| **Animations** | React Spring / AuraFX | Smooth transitions and interactions |
+| **Forms** | Valibot | Schema validation |
+| **Animations** | React Spring | Smooth transitions and interactions |
 | **Theme** | next-themes | Dark/light mode support |
 
 ### Blockchain Integrations
@@ -111,7 +111,7 @@ The Social Portfolio Platform aggregates on-chain identity, multi-chain portfoli
 
 ```bash
 # Clone the repository
-git clone https://github.com/SMSDAO/app.git
+git clone https://github.com/ethereumfollowprotocol/app.git
 cd app
 
 # Install dependencies
@@ -170,16 +170,18 @@ app/
 │   │   └── dao/                # DAO analytics components
 │   │
 │   ├── lib/                    # Core libraries & integrations
-│   │   ├── wagmi/              # Wagmi configuration
-│   │   ├── viem/               # Viem utilities
-│   │   └── redis/              # Redis/cache utilities
+│   │   ├── wagmi.ts            # Wagmi configuration
+│   │   ├── redis.ts            # Redis/cache utilities
+│   │   ├── utilities.ts        # Helper utilities
+│   │   └── constants/          # Constants and configuration
 │   │
 │   ├── hooks/                  # Custom React hooks
 │   ├── utils/                  # Helper functions
 │   └── data/                   # Static data & CSV datasets
 │
 ├── docs/                       # Documentation
-│   ├── ARCHITECTURE.md         # System architecture
+│   ├── README.md              # Documentation home and overview
+│   ├── ARCHITECTURE.md        # System architecture
 │   ├── FEATURES.md            # Feature specifications
 │   ├── API.md                 # API documentation
 │   ├── CONTRIBUTING.md        # Contribution guidelines
@@ -195,60 +197,33 @@ app/
 
 ## 🔌 API Overview
 
-The platform provides comprehensive APIs for profiles, wallets, social integrations, and DAO analytics.
+The platform provides APIs for address lookups, health checks, and profile data.
 
-### Profile APIs
-
-```bash
-# Get profile data
-GET /api/profile/[address]
-
-# Claim profile with wallet signature
-POST /api/profile/claim
-```
-
-### Wallet APIs
+### Available APIs
 
 ```bash
-# Get token balances across chains
-GET /api/wallet/[address]/tokens?chains=ethereum,polygon
+# Address lookup and resolution
+GET /api/address/[addressOrName]
 
-# Get NFT collection
-GET /api/wallet/[address]/nfts
+# Application health check
+GET /api/health
 
-# Get transaction history
-GET /api/wallet/[address]/transactions
+# Application status
+GET /api/status
+
+# Top eight profiles
+GET /api/top-eight
 ```
 
-### Social APIs
+### Planned APIs
 
-```bash
-# Farcaster profile and casts
-GET /api/social/farcaster/[fid]
+The following endpoints are documented in [docs/API.md](docs/API.md) but not yet implemented:
 
-# Lens Protocol profile
-GET /api/social/lens/[handle]
-
-# Zora creations and mints
-GET /api/social/zora/[address]
-```
-
-### DAO APIs
-
-```bash
-# Get DAO memberships
-GET /api/dao/[address]/memberships
-
-# Get governance activity
-GET /api/dao/[address]/activity
-```
-
-### Search API
-
-```bash
-# Universal search
-GET /api/search?q=vitalik&type=profile
-```
+- Profile management (`/api/profile/*`)
+- Wallet analytics (`/api/wallet/*`)
+- Social integrations (`/api/social/*`)
+- DAO analytics (`/api/dao/*`)
+- Search functionality (`/api/search`)
 
 **Full API documentation**: [docs/API.md](docs/API.md)
 
@@ -316,35 +291,31 @@ Create a `.env` file based on `.env.example`:
 
 ```bash
 # Application
-NEXT_PUBLIC_APP_URL=http://localhost:3443
 NODE_ENV=development
+NEXT_PUBLIC_SITE_URL=http://efp.app
+NEXT_PUBLIC_BASE_URL=http://localhost:3443
+PORT=3443
 
 # Wallet Connect
 NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID=your_project_id
 
 # Blockchain APIs
-ALCHEMY_API_KEY=your_alchemy_key
-HELIUS_API_KEY=your_helius_key
+NEXT_PUBLIC_MAINNET_ALCHEMY_ID=your_mainnet_alchemy_id
+NEXT_PUBLIC_BASE_ALCHEMY_ID=your_base_alchemy_id
+NEXT_PUBLIC_OPTIMISM_ALCHEMY_ID=your_optimism_alchemy_id
+NEXT_PUBLIC_QUICKNODE_ID=your_quicknode_id
 
-# Social Platform APIs
-FARCASTER_API_KEY=your_farcaster_key
-LENS_API_KEY=your_lens_key
-ZORA_API_KEY=your_zora_key
-
-# DAO APIs
-SNAPSHOT_API_KEY=your_snapshot_key
-TALLY_API_KEY=your_tally_key
+# EFP API
+EFP_API_URL=https://data.ethfollow.xyz/api/v1
+NEXT_PUBLIC_EFP_API_URL=https://data.ethfollow.xyz/api/v1
 
 # Monitoring (Optional)
 SENTRY_DSN=your_sentry_dsn
 SENTRY_AUTH_TOKEN=your_sentry_auth_token
-
-# Analytics (Optional)
-NEXT_PUBLIC_GOOGLE_ANALYTICS=your_ga_id
-VERCEL_ANALYTICS_ID=your_vercel_analytics_id
+NEXT_PUBLIC_SENTRY_DSN=your_sentry_dsn
 ```
 
-See `.env.example` for a complete list of environment variables.
+See `.env.example` for a complete list of environment variables and their descriptions.
 
 ## 🧪 Development Workflow
 
@@ -425,13 +396,13 @@ For self-hosted deployments, see the comprehensive guide in [docs/DEPLOYMENT.md]
 
 ### CI/CD Pipeline
 
-Every PR must pass:
+Every PR must pass these core checks:
 - ✅ Type checking (TypeScript)
 - ✅ Linting (ESLint)
-- ✅ Code formatting (Prettier)
 - ✅ Build verification
-- ✅ Documentation validation
-- ✅ Security scanning
+
+Additional checks run conditionally:
+- ✅ Documentation validation (for changes under `docs/**`)
 
 Deployment is automatic on merge to `main`.
 
@@ -444,13 +415,14 @@ Deployment is automatic on merge to `main`.
 - **SIWE (Sign-In with Ethereum)**: Wallet-based authentication
 - **Session Management**: Secure HTTP-only cookies
 - **CSRF Protection**: Built-in Next.js protections
-- **Input Validation**: Valibot schema validation on all inputs
+- **Input Validation**: Robust input validation and sanitization across API routes and UI forms
 
 ### Rate Limiting
 
-- API endpoints: 100 requests/minute per IP
-- Burst protection: 10 requests/second
-- Automatic throttling on suspicious activity
+Rate limiting should be configured at the infrastructure level:
+- Recommended to configure rate limiting for all public API endpoints
+- Implement request quotas and burst protection at your API gateway or reverse proxy (e.g., Cloudflare, Nginx, API Gateway)
+- Optional throttling or blocking on suspicious activity should be enforced via your infrastructure or security provider
 
 ### Data Protection
 
@@ -464,7 +436,7 @@ Deployment is automatic on merge to `main`.
 - **Error Tracking**: Sentry integration for all environments
 - **Performance Monitoring**: Core Web Vitals tracking
 - **Health Checks**: `/api/health` endpoint for uptime monitoring
-- **Logging**: Structured logging with Pino
+- **Logging**: Structured application logging for API routes and background jobs
 
 **Monitoring guide**: [docs/MONITORING.md](docs/MONITORING.md)
 
@@ -474,7 +446,7 @@ Deployment is automatic on merge to `main`.
 
 - **Server Components**: Reduced client-side JavaScript
 - **Code Splitting**: Automatic route-based splitting
-- **Image Optimization**: Next.js Image component with AVIF/WebP
+- **Images**: Served via the Next.js Image component; built-in AVIF/WebP optimization is currently disabled (`images.unoptimized = true`)
 - **Caching**: Multi-layer caching strategy (browser, query, API)
 - **Edge Runtime**: Global distribution via Vercel Edge Network
 
@@ -528,6 +500,7 @@ We follow a strict governance model to ensure code quality and maintainability. 
 
 Comprehensive documentation is available in the `/docs` directory:
 
+- **[README.md](docs/README.md)**: Documentation home and overview
 - **[ARCHITECTURE.md](docs/ARCHITECTURE.md)**: System architecture and design patterns
 - **[FEATURES.md](docs/FEATURES.md)**: Detailed feature specifications
 - **[API.md](docs/API.md)**: Complete API reference and integration guides
@@ -551,8 +524,8 @@ Planned features and improvements:
 ## 💬 Community & Support
 
 - **Discord**: [Discord Server](https://discord.efp.app) - Join for discussions and support
-- **GitHub Discussions**: [Discussions](https://github.com/SMSDAO/app/discussions) - Feature requests and community proposals
-- **GitHub Issues**: [Issues](https://github.com/SMSDAO/app/issues) - Bug reports and feature requests
+- **GitHub Discussions**: [Discussions](https://github.com/ethereumfollowprotocol/app/discussions) - Feature requests and community proposals
+- **GitHub Issues**: [Issues](https://github.com/ethereumfollowprotocol/app/issues) - Bug reports and feature requests
 - **Email**: [encrypted@ethfollow.xyz](mailto:encrypted@ethfollow.xyz) - Direct support
 
 ## 🛠 Maintainers
