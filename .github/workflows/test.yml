@@ -1,0 +1,86 @@
+# Test Workflow
+# Runs automated tests on all pull requests and pushes
+# Performs linting, type checking, and production build verification
+
+name: Test
+
+on:
+  pull_request:
+  push:
+    branches: '*'
+  workflow_dispatch:
+
+# Prevent concurrent runs for the same workflow and ref
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+# Environment variables available to all steps
+env:
+  NODE_OPTIONS: '--no-warnings'
+  NEXT_TELEMETRY_DISABLED: '1'
+
+jobs:
+  test:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    
+    # Minimal permissions following principle of least privilege
+    permissions:
+      contents: read
+    
+    steps:
+      # Step 1: Checkout the repository code
+      - name: 🔑 Checkout
+        uses: actions/checkout@v4
+      
+      # Step 2: Setup Bun runtime for fast JavaScript execution
+      - name: 📦 Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+      
+      # Step 3: Cache dependencies for faster subsequent runs
+      - name: 📥 Cache Dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.bun/install/cache
+            node_modules
+            .next/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
+      
+      # Step 4: Install project dependencies
+      - name: 🔧 Install Dependencies
+        run: bun install --frozen-lockfile
+      
+      # Step 5: Run ESLint to check code quality
+      - name: 🔍 Lint
+        run: bun lint
+      
+      # Step 6: Run TypeScript type checker
+      - name: 🔍 Type Check
+        run: bun typecheck
+      
+      # Step 7: Build the application for production
+      - name: 🏗️ Build
+        run: bun run build
+        env:
+          NODE_ENV: production
+          # Use secrets if available, otherwise use placeholder for build
+          NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || 'placeholder-for-ci-build' }}
+          NEXT_PUBLIC_VAPID_PUBLIC_KEY: ${{ secrets.NEXT_PUBLIC_VAPID_PUBLIC_KEY || 'placeholder-vapid-public-key-for-ci-build-only' }}
+          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY || 'placeholder-vapid-private-key-for-ci-build-only' }}
+          # Redis URL - use a non-existent URL so the app doesn't try to connect during build
+          REDIS_URL: 'redis://placeholder:6379'
+      
+      # Step 8: Success message
+      - name: ✅ Tests Passed
+        if: success()
+        run: echo "All tests passed successfully!"
